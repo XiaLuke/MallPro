@@ -1,0 +1,19 @@
+# 端口
+server:
+  port: 10000
+
+# 数据源
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.56.10:3306/mall_warehousing
+    username: root
+    password: 987654
+
+# mapper映射地址
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+#  主键自增
+  global-config:
+    db-config:
+      id-type: auto
