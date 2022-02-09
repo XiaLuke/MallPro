@@ -4,9 +4,9 @@ import cn.xf.common.utils.R;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@FeignClient("/coupon/smscoupon")
+@FeignClient("coupon")
 public interface FeignService {
 
-    @RequestMapping("/one")
-    public R one();
+    @RequestMapping("/coupon/coupon/one")
+    public R test();
 }

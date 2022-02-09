@@ -31,6 +31,10 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @RequestMapping("/getone")
+    public R getone(){
+        return R.ok().put("name","ssssss");
+    }
     /**
      * 列表
      */

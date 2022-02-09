@@ -1,10 +1,10 @@
-package cn.xf.mall.order;
+package cn.xf.order;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@MapperScan("cn.xf.mall.order.dao")
+@MapperScan("cn.xf.order.dao")
 @SpringBootApplication
 public class OrderApplication {
 
