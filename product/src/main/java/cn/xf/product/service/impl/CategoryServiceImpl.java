@@ -1,7 +1,11 @@
 package cn.xf.product.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +28,41 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         );
 
         return new PageUtils(page);
+    }
+
+    /**
+     * 查出所有分类并组装成为树形结构
+     *
+     * @return
+     */
+    @Override
+    public List<CategoryEntity> treeList() {
+        List<CategoryEntity> categoryEntityList = baseMapper.selectList(null);
+        // 一级分类
+        List<CategoryEntity> parent = categoryEntityList.stream().filter(categoryEntity ->
+                categoryEntity.getParentCid() == 0
+        ).map(item -> {
+            item.setChildrenList(getChildren(item, categoryEntityList));
+            return item;
+        }).sorted((item, itemNext) -> {
+            return (item.getSort()==null?0:item.getSort()) - (itemNext.getSort()==null?0:itemNext.getSort());
+        }).collect(Collectors.toList());
+        return parent;
+    }
+
+
+    private List<CategoryEntity> getChildren(CategoryEntity category, List<CategoryEntity> categoryEntityList) {
+        List<CategoryEntity> children = categoryEntityList.stream().filter(categoryEntity -> {
+            return categoryEntity.getParentCid().equals(category.getCatId());
+        }).map(categoryEntity -> {
+            // 找子菜单
+            categoryEntity.setChildrenList(getChildren(categoryEntity, categoryEntityList));
+            return categoryEntity;
+        }).sorted((item, itemNext) -> {
+            // 排序
+            return (item.getSort()==null?0:item.getSort()) - (itemNext.getSort()==null?0:itemNext.getSort());
+        }).collect(Collectors.toList());
+        return children;
     }
 
 }

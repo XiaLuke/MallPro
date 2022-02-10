@@ -1,6 +1,7 @@
 package cn.xf.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -35,11 +36,19 @@ public class CategoryController {
      * 列表
      */
     @RequestMapping("/list")
-    //@RequiresPermissions("product:category:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = categoryService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 查询分类并以树状结构展示
+     */
+    @RequestMapping("/tree")
+    public R treeList(){
+        List<CategoryEntity> categoryTree = categoryService.treeList();
+        return R.ok().put("tree",categoryTree);
     }
 
 
