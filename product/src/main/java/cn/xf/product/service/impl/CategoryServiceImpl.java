@@ -50,6 +50,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return parent;
     }
 
+    @Override
+    public void removeItemByIds(List<Long> idList) {
+        //TODO 检查当前删除数据是否在其他地方使用
+        // 逻辑删除
+        baseMapper.deleteBatchIds(idList);
+    }
+
 
     private List<CategoryEntity> getChildren(CategoryEntity category, List<CategoryEntity> categoryEntityList) {
         List<CategoryEntity> children = categoryEntityList.stream().filter(categoryEntity -> {

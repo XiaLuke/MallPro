@@ -51,12 +51,10 @@ public class CategoryController {
         return R.ok().put("tree",categoryTree);
     }
 
-
     /**
      * 信息
      */
     @RequestMapping("/info/{catId}")
-    //@RequiresPermissions("product:category:info")
     public R info(@PathVariable("catId") Long catId){
 		CategoryEntity category = categoryService.getById(catId);
 
@@ -67,7 +65,6 @@ public class CategoryController {
      * 保存
      */
     @RequestMapping("/save")
-    //@RequiresPermissions("product:category:save")
     public R save(@RequestBody CategoryEntity category){
 		categoryService.save(category);
 
@@ -78,7 +75,6 @@ public class CategoryController {
      * 修改
      */
     @RequestMapping("/update")
-    //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
 		categoryService.updateById(category);
 
@@ -87,11 +83,16 @@ public class CategoryController {
 
     /**
      * 删除
+     *
+     * @RequestBody：获取请求体，只有POST才有
+     * SpringMVC自动将请求体（json）数据转为对象
      */
     @RequestMapping("/delete")
-    //@RequiresPermissions("product:category:delete")
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
+        // 检查当前菜单是否被其他地方引用
+        categoryService.removeItemByIds(Arrays.asList(catIds));
+
+//		categoryService.removeByIds(Arrays.asList(catIds));
 
         return R.ok();
     }
