@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 10/02/2022 18:01:18
+ Date: 13/02/2022 17:45:56
 */
 
 SET NAMES utf8mb4;
@@ -170,7 +170,7 @@ CREATE TABLE `QRTZ_SCHEDULER_STATE`  (
 -- ----------------------------
 -- Records of QRTZ_SCHEDULER_STATE
 -- ----------------------------
-INSERT INTO `QRTZ_SCHEDULER_STATE` VALUES ('RenrenScheduler', 'DESKTOP-94S9PPU1643984912102', 1643989386224, 15000);
+INSERT INTO `QRTZ_SCHEDULER_STATE` VALUES ('RenrenScheduler', 'DESKTOP-94S9PPU1644570872066', 1644574058620, 15000);
 
 -- ----------------------------
 -- Table structure for QRTZ_SIMPLE_TRIGGERS
@@ -258,7 +258,7 @@ CREATE TABLE `QRTZ_TRIGGERS`  (
 -- ----------------------------
 -- Records of QRTZ_TRIGGERS
 -- ----------------------------
-INSERT INTO `QRTZ_TRIGGERS` VALUES ('RenrenScheduler', 'TASK_1', 'DEFAULT', 'TASK_1', 'DEFAULT', NULL, 1643990400000, 1643988600000, 5, 'WAITING', 'CRON', 1643984912000, 0, NULL, 2, '');
+INSERT INTO `QRTZ_TRIGGERS` VALUES ('RenrenScheduler', 'TASK_1', 'DEFAULT', 'TASK_1', 'DEFAULT', NULL, 1644575400000, 1644573600000, 5, 'WAITING', 'CRON', 1643984912000, 0, NULL, 2, 0xACED0005737200156F72672E71756172747A2E4A6F62446174614D61709FB083E8BFA9B0CB020000787200266F72672E71756172747A2E7574696C732E537472696E674B65794469727479466C61674D61708208E8C3FBC55D280200015A0013616C6C6F77735472616E7369656E74446174617872001D6F72672E71756172747A2E7574696C732E4469727479466C61674D617013E62EAD28760ACE0200025A000564697274794C00036D617074000F4C6A6176612F7574696C2F4D61703B787001737200116A6176612E7574696C2E486173684D61700507DAC1C31660D103000246000A6C6F6164466163746F724900097468726573686F6C6478703F4000000000000C7708000000100000000174000D4A4F425F504152414D5F4B45597372002E696F2E72656E72656E2E6D6F64756C65732E6A6F622E656E746974792E5363686564756C654A6F62456E7469747900000000000000010200074C00086265616E4E616D657400124C6A6176612F6C616E672F537472696E673B4C000A63726561746554696D657400104C6A6176612F7574696C2F446174653B4C000E63726F6E45787072657373696F6E71007E00094C00056A6F6249647400104C6A6176612F6C616E672F4C6F6E673B4C0006706172616D7371007E00094C000672656D61726B71007E00094C00067374617475737400134C6A6176612F6C616E672F496E74656765723B7870740008746573745461736B7372000E6A6176612E7574696C2E44617465686A81014B597419030000787077080000017EC36702587874000E3020302F3330202A202A202A203F7372000E6A6176612E6C616E672E4C6F6E673B8BE490CC8F23DF0200014A000576616C7565787200106A6176612E6C616E672E4E756D62657286AC951D0B94E08B0200007870000000000000000174000672656E72656E74000CE58F82E695B0E6B58BE8AF95737200116A6176612E6C616E672E496E746567657212E2A0A4F781873802000149000576616C75657871007E0013000000007800);
 
 -- ----------------------------
 -- Table structure for schedule_job
@@ -295,7 +295,7 @@ CREATE TABLE `schedule_job_log`  (
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`log_id`) USING BTREE,
   INDEX `job_id`(`job_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '定时任务日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of schedule_job_log
@@ -303,6 +303,19 @@ CREATE TABLE `schedule_job_log`  (
 INSERT INTO `schedule_job_log` VALUES (1, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-04 22:30:00');
 INSERT INTO `schedule_job_log` VALUES (2, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-04 23:00:00');
 INSERT INTO `schedule_job_log` VALUES (3, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-04 23:30:00');
+INSERT INTO `schedule_job_log` VALUES (4, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 09:30:00');
+INSERT INTO `schedule_job_log` VALUES (5, 1, 'testTask', 'renren', 0, NULL, 2, '2022-02-11 10:30:00');
+INSERT INTO `schedule_job_log` VALUES (6, 1, 'testTask', 'renren', 0, NULL, 2, '2022-02-11 11:00:00');
+INSERT INTO `schedule_job_log` VALUES (7, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 11:30:00');
+INSERT INTO `schedule_job_log` VALUES (8, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 12:00:00');
+INSERT INTO `schedule_job_log` VALUES (9, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 12:30:00');
+INSERT INTO `schedule_job_log` VALUES (10, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 14:30:00');
+INSERT INTO `schedule_job_log` VALUES (11, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 15:00:00');
+INSERT INTO `schedule_job_log` VALUES (12, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 15:30:00');
+INSERT INTO `schedule_job_log` VALUES (13, 1, 'testTask', 'renren', 0, NULL, 0, '2022-02-11 16:00:00');
+INSERT INTO `schedule_job_log` VALUES (14, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 16:30:00');
+INSERT INTO `schedule_job_log` VALUES (15, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 17:30:00');
+INSERT INTO `schedule_job_log` VALUES (16, 1, 'testTask', 'renren', 0, NULL, 1, '2022-02-11 18:00:00');
 
 -- ----------------------------
 -- Table structure for sys_captcha
@@ -318,6 +331,8 @@ CREATE TABLE `sys_captcha`  (
 -- ----------------------------
 -- Records of sys_captcha
 -- ----------------------------
+INSERT INTO `sys_captcha` VALUES ('00487c7c-fc11-437d-8f1b-66ab08b28827', 'd6mn2', '2022-02-11 10:32:35');
+INSERT INTO `sys_captcha` VALUES ('41de88f6-1eda-4f77-8992-7ca05cdb41c8', 'm6g74', '2022-02-11 11:22:05');
 
 -- ----------------------------
 -- Table structure for sys_config
@@ -352,11 +367,13 @@ CREATE TABLE `sys_log`  (
   `ip` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'IP地址',
   `create_date` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '系统日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_log
 -- ----------------------------
+INSERT INTO `sys_log` VALUES (1, 'admin', '保存菜单', 'io.renren.modules.sys.controller.SysMenuController.save()', '[{\"menuId\":31,\"parentId\":0,\"name\":\"商品系统\",\"url\":\"\",\"perms\":\"\",\"type\":0,\"icon\":\"menu\",\"orderNum\":0,\"list\":[]}]', 15, '0:0:0:0:0:0:0:1', '2022-02-11 09:08:21');
+INSERT INTO `sys_log` VALUES (2, 'admin', '保存菜单', 'io.renren.modules.sys.controller.SysMenuController.save()', '[{\"menuId\":32,\"parentId\":31,\"name\":\"类型菜单\",\"url\":\"product/category\",\"perms\":\"\",\"type\":1,\"icon\":\"mudedi\",\"orderNum\":0,\"list\":[]}]', 17, '0:0:0:0:0:0:0:1', '2022-02-11 09:09:30');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -372,7 +389,7 @@ CREATE TABLE `sys_menu`  (
   `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '菜单图标',
   `order_num` int(0) NULL DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 30 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单管理' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '菜单管理' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -406,6 +423,8 @@ INSERT INTO `sys_menu` VALUES (26, 4, '删除', NULL, 'sys:menu:delete', 2, NULL
 INSERT INTO `sys_menu` VALUES (27, 1, '参数管理', 'sys/config', 'sys:config:list,sys:config:info,sys:config:save,sys:config:update,sys:config:delete', 1, 'config', 6);
 INSERT INTO `sys_menu` VALUES (29, 1, '系统日志', 'sys/log', 'sys:log:list', 1, 'log', 7);
 INSERT INTO `sys_menu` VALUES (30, 1, '文件上传', 'oss/oss', 'sys:oss:all', 1, 'oss', 6);
+INSERT INTO `sys_menu` VALUES (31, 0, '商品系统', '', '', 0, 'menu', 0);
+INSERT INTO `sys_menu` VALUES (32, 31, '类型菜单', 'product/category', '', 1, 'mudedi', 0);
 
 -- ----------------------------
 -- Table structure for sys_oss
@@ -508,7 +527,7 @@ CREATE TABLE `sys_user_token`  (
 -- ----------------------------
 -- Records of sys_user_token
 -- ----------------------------
-INSERT INTO `sys_user_token` VALUES (1, 'abbcd7ec0312e4df50f180ca152b096e', '2022-02-05 10:36:31', '2022-02-04 22:36:31');
+INSERT INTO `sys_user_token` VALUES (1, '1a7f953797a392cbb29b24f81a5d4144', '2022-02-11 23:19:06', '2022-02-11 11:19:06');
 
 -- ----------------------------
 -- Table structure for tb_user
