@@ -1,57 +1,77 @@
+前序：
+```
+安装vagrant和vrituralbox
+
+通过cmd使用vgrant init centos/7进行虚拟机初始化
+然后使用可视化页面或者vagrant up启动虚拟机
+
+vgrant ssh连接虚拟机
+
+设置虚拟机ip地址：
+    修改本机c盘用户文件夹下vagrantfile文件中的ip地址
+```
+
+安装docker
+
+参看官方文档`https://docs.docker.com/engine/install/centos/`
+
 1.卸载旧版本
 
 ```
  sudo yum remove docker \
-	docker-clident \
-    docker-client-latest \
-    docker-common \
-    docker-latest \
-    docker-latest-logrotate \
-    docker-logrotate \
-    docker-engine
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
 ```
 
 2.安装docker使用的相应插件
 
 ```
-sudo yum install -y yum-utils \
-	device-mapper-persistent-date \
-	lvm2
+sudo yum install -y yum-utils
 ```
 
 3.安装docker镜像
 
 ```
 sudo yum-config-manager \
-	--add-repo \
-	https://download.docker.com/linux/centos/docker-ce.repo
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
 ```
 
-4.启动docker
+4.设置可操作页面
+```
+sudo yum install docker-ce docker-ce-cli containerd.io
+```
+
+5.启动docker
 
 ```
 sudo systemctl start docker
 ```
 
-5.检查docker版本
+6.检查docker版本
 
 ```
 docker -v
 ```
 
-6.检查docker中的镜像
+7.检查docker中的镜像
 
 ```
 sudo docker images
 ```
 
-7.docker开机自启
+8.docker开机自启
 
 ```
 sudo systemctl enable docker
 ```
 
-8.docker镜像加速
+9.docker镜像加速
 
 ```
 sudo mkdir -p /etc/docker
@@ -67,13 +87,13 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
 
-9.安装mysql
+10.安装mysql
 
 ```
 sudo docker pull mysql:版本
 ```
 
-10.创建实例（需要root权限 "su root  vagrant"）
+11.创建实例（需要root权限 "su root  vagrant"）
 
 ```
 docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=987654 \
@@ -92,19 +112,19 @@ docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=987654 \
 -e MYSQL_ROOT_PASSWORD=987654：初始化root用户密码
 ```
 
-11.docker运行中的容器
+12.docker运行中的容器
 
 ```
 docker ps -a
 ```
 
-12.进入mysql容器
+13.进入mysql容器
 
 ```
 docker exec -it mysql bash
 ```
 
-13.登录mysql查看用户信息
+14.登录mysql查看用户信息
 
 ```
 mysql -uroot -p密码
