@@ -18,8 +18,8 @@ import cn.xf.common.utils.PageUtils;
 import cn.xf.common.utils.R;
 
 
-
 /**
+ * 类别控制器
  * 商品三级分类
  *
  * @author XF
@@ -67,6 +67,19 @@ public class CategoryController {
     @RequestMapping("/save")
     public R save(@RequestBody CategoryEntity category){
 		categoryService.save(category);
+
+        return R.ok();
+    }
+
+    /**
+     * 重新排序
+     *
+     * @param category 类别
+     * @return {@link R}
+     */
+    @RequestMapping("/reSort")
+    public R reSort(@RequestBody CategoryEntity[] category){
+        categoryService.updateBatchById(Arrays.asList(category));
 
         return R.ok();
     }
