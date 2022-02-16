@@ -4,25 +4,27 @@
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()"
-             label-width="80px">
+             label-width="140px">
       <el-form-item label="品牌名" prop="name">
         <el-input v-model="dataForm.name" placeholder="品牌名"></el-input>
       </el-form-item>
       <el-form-item label="品牌logo地址" prop="logo">
-        <el-input v-model="dataForm.logo" placeholder="品牌logo地址"></el-input>
+        <singleUpload v-model="dataForm.logo"/>
       </el-form-item>
       <el-form-item label="介绍" prop="descript">
         <el-input v-model="dataForm.descript" placeholder="介绍"></el-input>
       </el-form-item>
       <!--[0-不显示；1-显示]-->
       <el-form-item label="显示状态" prop="showStatus">
-        <el-input v-model="dataForm.showStatus" placeholder="显示状态[0-不显示；1-显示]"></el-input>
+        <el-switch v-model="dataForm.showStatus" active-color="#13ce66" inactive-color="#ff4949"
+                   :active-value="1" :inactive-value="0"
+        />
       </el-form-item>
       <el-form-item label="检索首字母" prop="firstLetter">
         <el-input v-model="dataForm.firstLetter" placeholder="检索首字母"></el-input>
       </el-form-item>
       <el-form-item label="排序" prop="sort">
-        <el-input v-model="dataForm.sort" placeholder="排序"></el-input>
+        <el-input v-model.number="dataForm.sort" placeholder="排序"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -33,7 +35,10 @@
 </template>
 
 <script>
+import singleUpload from "@/components/upload/singleUpload"
+
 export default {
+  components: {singleUpload},
   data() {
     return {
       visible: false,
@@ -60,10 +65,31 @@ export default {
           {required: true, message: '显示状态[0-不显示；1-显示]不能为空', trigger: 'blur'}
         ],
         firstLetter: [
-          {required: true, message: '检索首字母不能为空', trigger: 'blur'}
+          {
+            validator: (rule, value, callback) => {
+              let reg = /^[a-zA-Z]$/
+              if (value == '') {
+                callback(new Error('首字母不能为空'))
+              } else if (!reg.test(value)) {
+                callback(new Error('首字母范围为a-z或A-Z'))
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          },
         ],
         sort: [
-          {required: true, message: '排序不能为空', trigger: 'blur'}
+          {
+            validator: (rule, value, callback) => {
+              if (value == '') {
+                callback(new Error('排序不能为空'))
+              } else if (!Number.isInteger(value)) {
+                callback(new Error('排序需为整数'));
+              } else {
+                callback()
+              }
+            }, trigger: 'blur'
+          }
         ]
       }
     }
@@ -94,7 +120,9 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
+      console.log("sss")
       this.$refs['dataForm'].validate((valid) => {
+        console.error("valid", valid)
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(`/product/brand/${!this.dataForm.brandId ? 'save' : 'update'}`),
@@ -125,7 +153,7 @@ export default {
           })
         }
       })
-    }
+    },
   }
 }
 </script>

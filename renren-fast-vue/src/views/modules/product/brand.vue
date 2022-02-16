@@ -41,6 +41,10 @@
         header-align="center"
         align="center"
         label="品牌logo地址">
+        <template slot-scope="scope">
+          <el-image fit="fill" :src="scope.row.logo" style="width:100px;height: 80px"/>
+          <img :src="scope.row.logo" style="width:100px;height: 80px"/>
+        </template>
       </el-table-column>
       <el-table-column
         prop="descript"
@@ -54,6 +58,12 @@
         header-align="center"
         align="center"
         label="显示状态">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.showStatus" active-color="#13ce66" inactive-color="#ff4949"
+                     :active-value='1'
+                     :inactive-value='0'
+                     @change="switchChange(scope.row)"></el-switch>
+        </template>
       </el-table-column>
       <el-table-column
         prop="firstLetter"
@@ -190,6 +200,17 @@ export default {
             this.$message.error(data.msg)
           }
         })
+      })
+    },
+    switchChange(data) {
+      let {brandId, showStatus} = data
+      // 修改状态
+      this.$http({
+        url: this.$http.adornUrl('/product/brand/changeStatus'),
+        method: 'post',
+        data: this.$http.adornData({brandId, showStatus}, false)
+      }).then(({res}) => {
+        this.$message.success('状态更新成功')
       })
     }
   }
