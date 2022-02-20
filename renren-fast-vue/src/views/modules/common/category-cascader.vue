@@ -41,7 +41,7 @@ export default {
       setting: {
         value: "catId",
         label: "name",
-        children: "children"
+        children: "childrenList"
       },
       categorys: [],
       paths: this.catelogPath
@@ -54,17 +54,18 @@ export default {
     paths(v) {
       this.$emit("update:catelogPath", v);
       //还可以使用pubsub-js进行传值
-      this.PubSub.publish("catPath", v);
+      // this.PubSub.publish("catPath", v);
     }
   },
   //方法集合
   methods: {
     getCategorys() {
       this.$http({
-        url: this.$http.adornUrl("/product/category/list/tree"),
+        url: this.$http.adornUrl("/product/category/tree"),
         method: "get"
       }).then(({data}) => {
-        this.categorys = data.data;
+        console.log(data.tree)
+        this.categorys = data.tree;
       });
     }
   },

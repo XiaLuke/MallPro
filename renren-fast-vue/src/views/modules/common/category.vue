@@ -1,4 +1,4 @@
-<!--三级分类组件-->
+<!--三级分类公共组件-->
 <template>
   <div>
     <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
@@ -54,7 +54,8 @@ export default {
         url: this.$http.adornUrl("/product/category/tree"),
         method: "get"
       }).then(({data}) => {
-        this.menus = data.data;
+        console.log(data)
+        this.menus = data.tree;
       });
     },
     nodeClick(data, node, component) {

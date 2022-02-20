@@ -82,7 +82,7 @@ export default {
     },
     getCategorys(){
       this.$http({
-        url: this.$http.adornUrl("/product/category/list/tree"),
+        url: this.$http.adornUrl("/product/category/tree"),
         method: "get"
       }).then(({ data }) => {
         this.categorys = data.data;
@@ -116,7 +116,8 @@ export default {
     },
     // 表单提交
     dataFormSubmit() {
-      this.$refs["dataForm"].validate(valid => {
+      console.log(this.catelogPath[this.catelogPath.length-1])
+      /*this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
@@ -131,6 +132,7 @@ export default {
               sort: this.dataForm.sort,
               descript: this.dataForm.descript,
               icon: this.dataForm.icon,
+              // 获取到的是一个数组，只需要最后一个id即当前保存到哪一级的id就行
               catelogId: this.catelogPath[this.catelogPath.length-1]
             })
           }).then(({ data }) => {
@@ -149,7 +151,7 @@ export default {
             }
           });
         }
-      });
+      });*/
     }
   },
   created(){

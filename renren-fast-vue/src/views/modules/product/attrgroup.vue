@@ -125,6 +125,7 @@ export default {
     },
     //感知树节点被点击
     treenodeclick(data, node, component) {
+      // 当点击三级分类3时进行赋值
       if (node.level == 3) {
         this.catId = data.catId;
         this.getDataList(); //重新查询
@@ -138,7 +139,7 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl(`/product/attrgroup/list`),
+        url: this.$http.adornUrl(`/product/attrgroup/list/${this.catId}`),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
@@ -217,5 +218,5 @@ export default {
   }
 };
 </script>
-<stylescoped>
+<style scoped>
 </style>
