@@ -78,6 +78,7 @@ export default {
 
   methods: {
     dialogClose(){
+      // 清空已选分类
       this.catelogPath = [];
     },
     getCategorys(){
@@ -107,7 +108,7 @@ export default {
               this.dataForm.descript = data.attrGroup.descript;
               this.dataForm.icon = data.attrGroup.icon;
               this.dataForm.catelogId = data.attrGroup.catelogId;
-              //查出catelogId的完整路径
+              //查出catelogId的完整路径,用于展示所属类的信息
               this.catelogPath =  data.attrGroup.catelogPath;
             }
           });
@@ -117,7 +118,7 @@ export default {
     // 表单提交
     dataFormSubmit() {
       console.log(this.catelogPath[this.catelogPath.length-1])
-      /*this.$refs["dataForm"].validate(valid => {
+      this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$http({
             url: this.$http.adornUrl(
@@ -151,7 +152,7 @@ export default {
             }
           });
         }
-      });*/
+      });
     }
   },
   created(){

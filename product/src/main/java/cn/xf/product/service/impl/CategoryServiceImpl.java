@@ -2,6 +2,8 @@ package cn.xf.product.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,7 +47,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             item.setChildrenList(getChildren(item, categoryEntityList));
             return item;
         }).sorted((item, itemNext) -> {
-            return (item.getSort()==null?0:item.getSort()) - (itemNext.getSort()==null?0:itemNext.getSort());
+            return (item.getSort() == null ? 0 : item.getSort()) - (itemNext.getSort() == null ? 0 : itemNext.getSort());
         }).collect(Collectors.toList());
         return parent;
     }
@@ -57,6 +59,26 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         baseMapper.deleteBatchIds(idList);
     }
 
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+
+        Collections.reverse(parentPath);
+
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    private List<Long> findParentPath(Long catelogId, List<Long> paths) {
+        //1、收集当前节点id
+        paths.add(catelogId);
+        // 当前分类
+        CategoryEntity byId = this.getById(catelogId);
+        if (byId.getParentCid() != 0) {
+            findParentPath(byId.getParentCid(), paths);
+        }
+        return paths;
+    }
 
     private List<CategoryEntity> getChildren(CategoryEntity category, List<CategoryEntity> categoryEntityList) {
         List<CategoryEntity> children = categoryEntityList.stream().filter(categoryEntity -> {
@@ -67,7 +89,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             return categoryEntity;
         }).sorted((item, itemNext) -> {
             // 排序
-            return (item.getSort()==null?0:item.getSort()) - (itemNext.getSort()==null?0:itemNext.getSort());
+            return (item.getSort() == null ? 0 : item.getSort()) - (itemNext.getSort() == null ? 0 : itemNext.getSort());
         }).collect(Collectors.toList());
         return children;
     }
