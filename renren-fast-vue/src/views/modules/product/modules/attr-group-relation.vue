@@ -1,44 +1,6 @@
 <template>
   <div>
     <el-dialog :close-on-click-modal="false" :visible.sync="visible" @closed="dialogClose">
-      <el-dialog width="40%" title="选择属性" :visible.sync="innerVisible" append-to-body>
-        <div>
-          <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
-            <el-form-item>
-              <el-input v-model="dataForm.key" placeholder="参数名" clearable></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button @click="getDataList()">查询</el-button>
-            </el-form-item>
-          </el-form>
-          <el-table
-            :data="dataList"
-            border
-            v-loading="dataListLoading"
-            @selection-change="innerSelectionChangeHandle"
-            style="width: 100%;"
-          >
-            <el-table-column type="selection" header-align="center" align="center"></el-table-column>
-            <el-table-column prop="attrId" header-align="center" align="center" label="属性id"></el-table-column>
-            <el-table-column prop="attrName" header-align="center" align="center" label="属性名"></el-table-column>
-            <el-table-column prop="icon" header-align="center" align="center" label="属性图标"></el-table-column>
-            <el-table-column prop="valueSelect" header-align="center" align="center" label="可选值列表"></el-table-column>
-          </el-table>
-          <el-pagination
-            @size-change="sizeChangeHandle"
-            @current-change="currentChangeHandle"
-            :current-page="pageIndex"
-            :page-sizes="[10, 20, 50, 100]"
-            :page-size="pageSize"
-            :total="totalPage"
-            layout="total, sizes, prev, pager, next, jumper"
-          ></el-pagination>
-        </div>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="innerVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitAddRealtion">确认新增</el-button>
-        </div>
-      </el-dialog>
       <el-row>
         <el-col :span="24">
           <el-button type="primary" @click="addRelation">新建关联</el-button>
@@ -79,6 +41,7 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <add-attr-group-relation ref="addAttrGroupRelation" @refreshData="back2Parent"/>
   </div>
 </template>
 
@@ -86,27 +49,18 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import《组件名称》from'《组件路径》';
 
+import AddAttrGroupRelation from "./add-attr-group-relation";
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {AddAttrGroupRelation},
   props: {},
   data() {
     //这里存放数据
     return {
       attrGroupId: 0,
       visible: false,
-      innerVisible: false,
       relationAttrs: [],
       dataListSelections: [],
-      dataForm: {
-        key: ""
-      },
-      dataList: [],
-      pageIndex: 1,
-      pageSize: 10,
-      totalPage: 0,
-      dataListLoading: false,
-      innerdataListSelections: []
     };
   },
   //计算属性类似于data概念
@@ -118,12 +72,8 @@ export default {
     selectionChangeHandle(val) {
       this.dataListSelections = val;
     },
-    innerSelectionChangeHandle(val) {
-      this.innerdataListSelections = val;
-    },
     addRelation() {
-      this.getDataList();
-      this.innerVisible = true;
+      this.$refs.addAttrGroupRelation.init(this.attrGroupId)
     },
     batchDeleteRelation(val) {
       let postData = [];
@@ -160,29 +110,6 @@ export default {
         }
       });
     },
-    submitAddRealtion() {
-      this.innerVisible = false;
-      //准备数据
-      console.log("准备新增的数据", this.innerdataListSelections);
-      if (this.innerdataListSelections.length > 0) {
-        let postData = [];
-        this.innerdataListSelections.forEach(item => {
-          postData.push({ attrId: item.attrId, attrGroupId: this.attrGroupId });
-        });
-        this.$http({
-          url: this.$http.adornUrl("/product/attrgroup/attr/relation"),
-          method: "post",
-          data: this.$http.adornData(postData, false)
-        }).then(({ data }) => {
-          if (data.code == 0) {
-            this.$message({ type: "success", message: "新增关联成功" });
-          }
-          this.$emit("refreshData");
-          this.init(this.attrGroupId);
-        });
-      } else {
-      }
-    },
     init(id) {
       this.attrGroupId = id || 0;
       this.visible = true;
@@ -196,46 +123,13 @@ export default {
         this.relationAttrs = data.data;
       });
     },
+    back2Parent(parma){
+      this.init(parma)
+      this.$emit("refreshData")
+    },
     dialogClose() {},
-
-    //========
-    // 获取数据列表
-    getDataList() {
-      this.dataListLoading = true;
-      this.$http({
-        url: this.$http.adornUrl(
-          "/product/attrgroup/" + this.attrGroupId + "/noattr/relation"
-        ),
-        method: "get",
-        params: this.$http.adornParams({
-          page: this.pageIndex,
-          limit: this.pageSize,
-          key: this.dataForm.key
-        })
-      }).then(({ data }) => {
-        if (data && data.code === 0) {
-          this.dataList = data.page.list;
-          this.totalPage = data.page.totalCount;
-        } else {
-          this.dataList = [];
-          this.totalPage = 0;
-        }
-        this.dataListLoading = false;
-      });
-    },
-    // 每页数
-    sizeChangeHandle(val) {
-      this.pageSize = val;
-      this.pageIndex = 1;
-      this.getDataList();
-    },
-    // 当前页
-    currentChangeHandle(val) {
-      this.pageIndex = val;
-      this.getDataList();
-    }
   }
 };
 </script>
-<stylescoped>
+<style scoped>
 </style>

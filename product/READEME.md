@@ -4,6 +4,15 @@
 ## 属性分组与规格参数关联（product/attrgroup/{attrGroupId}/attr/relation）
 一个分组关联多个规格参数
 
+## 删除商品属性关联的规格参数（product/attrgroup/attr/relation/delete）
+使用属性id与属性分组id精确查询到中间表中的一条数据
+
+## 属性分组中关联关系新增属性分页信息（product/attrgroup/{attrGroupId}/noattr/relation）
+1. 获取当前分组的分组id
+2. 根据分组id拿到所有的有关分组信息
+3. 获取当前分组下的所有规格参数
+4. 获取当前分组下的还未关联的规格参数
+
 # 规格参数（根据商品属性中的类型区分为规格参数还是销售属性 attr_type = 1）
 
 规格参数是对每个属性分组设置详细信息，其中额外包含所属分类和所属分组

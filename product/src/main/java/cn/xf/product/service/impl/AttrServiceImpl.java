@@ -177,9 +177,54 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         List<Long> attrIds = attrAttrgroupRelationEntities.stream().map((entity) -> {
             return entity.getAttrId();
         }).collect(Collectors.toList());
+        if(attrIds.size() == 0 || attrIds == null){
+            return null;
+        }
         // 查寻所有集合信息
         List<AttrEntity> attrEntities = this.listByIds(attrIds);
         return attrEntities;
+    }
+
+    /**
+     * 获取当前选中的分组下还没有关联的规格参数
+     *
+     * @param attrGroupId 属性分组id
+     * @param map         数据集合
+     * @return {@link PageUtils}
+     */
+    @Override
+    public PageUtils getWithOutRelationByGroupId(Long attrGroupId, Map<String, Object> map) {
+
+        // 获取当前分组下的规格参数
+        AttrGroupEntity groupEntity = attrGroupDao.selectById(attrGroupId);
+        // 拿到当前分组id
+        Long catelogId = groupEntity.getCatelogId();
+        // 根据当前分组拿到所有分组信息
+        List<AttrGroupEntity> groupEntities = attrGroupDao.selectList(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+        // 获取所有的分组id
+        List<Long> groupIdList = groupEntities.stream().map((item) -> {
+            return item.getAttrGroupId();
+        }).collect(Collectors.toList());
+
+        // 获取当前商品属性分组下所有的规格参数
+        List<AttrAttrgroupRelationEntity> relationList = relationDao.selectList(new QueryWrapper<AttrAttrgroupRelationEntity>().in("attr_group_id", groupIdList));
+        List<Long> attrIdList = relationList.stream().map((item) -> {
+            return item.getAttrId();
+        }).collect(Collectors.toList());
+        // 获取当前分组下还没有关联的规格参数
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type",ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode());
+        if(attrIdList!=null && attrIdList.size()>0){
+            wrapper.notIn("attr_id", attrIdList);
+        }
+        String key = map.get("key").toString();
+        if (StringUtils.isNotEmpty(key)){
+            wrapper.and((wra)->{
+                wra.eq("attr_id",key).or().like("attr_name",key);
+            });
+        }
+        IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(map), wrapper);
+
+        return new PageUtils(page);
     }
 
 }

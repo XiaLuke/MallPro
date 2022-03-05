@@ -9,6 +9,7 @@ import cn.xf.product.entity.AttrEntity;
 import cn.xf.product.service.AttrAttrgroupRelationService;
 import cn.xf.product.service.AttrService;
 import cn.xf.product.service.CategoryService;
+import cn.xf.product.vo.AttrGroupRelationVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,10 +39,23 @@ public class AttrGroupController {
     @Autowired
     AttrAttrgroupRelationService relationService;
 
-    @GetMapping("/{attrId}/attr/relation")
-    public R attrGroupRelation(@PathVariable("attrId") Long attrId){
+    @GetMapping("/{attrGroupId}/attr/relation")
+    public R attrGroupRelation(@PathVariable("attrGroupId") Long attrId){
         List<AttrEntity> attrDetail = attrService.getRelationDetail(attrId);
         return R.ok().put("data",attrDetail);
+    }
+
+    /**
+     * 获取当前分组下没有进行关联的规格参数列表
+     *
+     * @param attrGroupId 当前分组的id
+     * @return {@link R}
+     */
+    @GetMapping("/{attrGroupId}/noattr/relation")
+    public R attrGroupWithOutRelation(@PathVariable("attrGroupId") Long attrGroupId,
+                                      @RequestParam Map<String,Object> map){
+        PageUtils page = attrService.getWithOutRelationByGroupId(attrGroupId,map);
+        return R.ok().put("page",page);
     }
 
     /**
@@ -98,7 +112,12 @@ public class AttrGroupController {
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] attrGroupIds){
 		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
+        return R.ok();
+    }
 
+    @PostMapping("/attr/relation/delete")
+    public R deleteRelation(@RequestBody AttrGroupRelationVo[] attrGroupRelationVo){
+        attrGroupService.deleteRelation(attrGroupRelationVo);
         return R.ok();
     }
 

@@ -1,5 +1,6 @@
 package cn.xf.product.service;
 
+import cn.xf.product.vo.AttrGroupRelationVo;
 import cn.xf.product.vo.AttrRespVo;
 import cn.xf.product.vo.AttributeVo;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -59,5 +60,14 @@ public interface AttrService extends IService<AttrEntity> {
      * @return {@link List}<{@link AttrEntity}>
      */
     List<AttrEntity> getRelationDetail(Long attrId);
+
+    /**
+     * 获取当前选中的分组下还没有关联的规格参数
+     *
+     * @param attrGroupId 属性分组id
+     * @param map         数据集合
+     * @return {@link PageUtils}
+     */
+    PageUtils getWithOutRelationByGroupId(Long attrGroupId, Map<String, Object> map);
 }
 
