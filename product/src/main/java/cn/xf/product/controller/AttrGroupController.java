@@ -1,18 +1,16 @@
 package cn.xf.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import cn.xf.product.entity.AttrEntity;
 import cn.xf.product.service.AttrAttrgroupRelationService;
 import cn.xf.product.service.AttrService;
 import cn.xf.product.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cn.xf.product.entity.AttrGroupEntity;
 import cn.xf.product.service.AttrGroupService;
@@ -39,6 +37,12 @@ public class AttrGroupController {
     AttrService attrService;
     @Autowired
     AttrAttrgroupRelationService relationService;
+
+    @GetMapping("/{attrId}/attr/relation")
+    public R attrGroupRelation(@PathVariable("attrId") Long attrId){
+        List<AttrEntity> attrDetail = attrService.getRelationDetail(attrId);
+        return R.ok().put("data",attrDetail);
+    }
 
     /**
      * 携带三级分类id查询列表
