@@ -1,9 +1,11 @@
 package cn.xf.product.service;
 
+import cn.xf.product.entity.BrandEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.xf.common.utils.PageUtils;
 import cn.xf.product.entity.CategoryBrandRelationEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,5 +41,7 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
      * @param name  名字
      */
     void updateCategory(Long catId, String name);
+
+    List<BrandEntity> getBrandsByCatId(Long catId);
 }
 

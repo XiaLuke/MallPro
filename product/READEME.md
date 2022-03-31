@@ -41,5 +41,17 @@ attr_type = 0
 ## 保存（product/attr/save）与更新（product/attr/update）
 销售属性不新增中间表信息与修改中间表信息
 
+## 循环依赖
+在发布商品查询品牌分类时，注入service出现循环依赖的问题：service注入service出现
+
+## 点击商品品牌时没有数据请求
+npm install --save pubsub-js
+
+在main.js中引入适用
+import Pubsub from 'pubsub-js'
+vue.prototype.PubSub = Pubsub
+
+
+
 
  
