@@ -1,5 +1,6 @@
 package cn.xf.coupon.service;
 
+import cn.xf.common.to.SkuReductionTo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.xf.common.utils.PageUtils;
 import cn.xf.coupon.entity.SkuFullReductionEntity;
@@ -16,5 +17,12 @@ import java.util.Map;
 public interface SkuFullReductionService extends IService<SkuFullReductionEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    /**
+     * 商品满减信息
+     *
+     * @param reductionTo 减少
+     */
+    void saveSkuReduction(SkuReductionTo reductionTo);
 }
 

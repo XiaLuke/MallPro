@@ -1,6 +1,7 @@
 package cn.xf.product.service;
 
 import cn.xf.product.vo.AttrGroupRelationVo;
+import cn.xf.product.vo.AttrGroupWithAttrsVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.xf.common.utils.PageUtils;
 import cn.xf.product.entity.AttrGroupEntity;
@@ -35,6 +36,14 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * @param attrGroupRelationVo 属性分组与规格参数
      */
     void deleteRelation(AttrGroupRelationVo[] attrGroupRelationVo);
+
+    /**
+     * 根据分类id查出所有的分组以及这些组里面的属性
+     *
+     * @param catelogId catelog id
+     * @return {@link List}<{@link AttrGroupWithAttrsVo}>
+     */
+    List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);
 
 
 //    List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);

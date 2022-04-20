@@ -10,6 +10,7 @@ import cn.xf.product.service.AttrAttrgroupRelationService;
 import cn.xf.product.service.AttrService;
 import cn.xf.product.service.CategoryService;
 import cn.xf.product.vo.AttrGroupRelationVo;
+import cn.xf.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +57,18 @@ public class AttrGroupController {
                                       @RequestParam Map<String,Object> map){
         PageUtils page = attrService.getWithOutRelationByGroupId(attrGroupId,map);
         return R.ok().put("page",page);
+    }
+
+    /**
+     * 根据分类查询获取所有分组与关联属性
+     * */
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId")Long catelogId){
+
+        //1、查出当前分类下的所有属性分组，
+        //2、查出每个属性分组的所有属性
+        List<AttrGroupWithAttrsVo> vos =  attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data",vos);
     }
 
     /**

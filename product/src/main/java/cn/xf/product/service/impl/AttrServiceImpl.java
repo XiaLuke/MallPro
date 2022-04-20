@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,13 +74,13 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
 
     @Override
     public PageUtils queryBaseAttrPage(Map<String, Object> params, Long catelogId, String type) {
-        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("attr_type", "base".equalsIgnoreCase(type)?ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode():ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode());
+        QueryWrapper<AttrEntity> queryWrapper = new QueryWrapper<AttrEntity>().eq("attr_type", "base".equalsIgnoreCase(type) ? ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode() : ProductConstant.AttrEnum.ATTR_TYPE_SALE.getCode());
         // catelogId为0时是查询所有
         if (catelogId != 0) {
             queryWrapper.eq("catelog_id", catelogId);
         }
         // 获取检索条件
-        String key = params.get("key").toString();
+        String key = (String) params.get("key") == null ? null : (String) params.get("key");
         // 如果检索条件不为空
         if (StringUtils.isNotEmpty(key)) {
             queryWrapper.and((wrapper) -> {
@@ -177,7 +178,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         List<Long> attrIds = attrAttrgroupRelationEntities.stream().map((entity) -> {
             return entity.getAttrId();
         }).collect(Collectors.toList());
-        if(attrIds.size() == 0 || attrIds == null){
+        if (attrIds.size() == 0 || attrIds == null) {
             return null;
         }
         // 查寻所有集合信息
@@ -212,19 +213,33 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
             return item.getAttrId();
         }).collect(Collectors.toList());
         // 获取当前分组下还没有关联的规格参数
-        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type",ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode());
-        if(attrIdList!=null && attrIdList.size()>0){
+        QueryWrapper<AttrEntity> wrapper = new QueryWrapper<AttrEntity>().eq("catelog_id", catelogId).eq("attr_type", ProductConstant.AttrEnum.ATTR_TYPE_BASE.getCode());
+        if (attrIdList != null && attrIdList.size() > 0) {
             wrapper.notIn("attr_id", attrIdList);
         }
         String key = map.get("key").toString();
-        if (StringUtils.isNotEmpty(key)){
-            wrapper.and((wra)->{
-                wra.eq("attr_id",key).or().like("attr_name",key);
+        if (StringUtils.isNotEmpty(key)) {
+            wrapper.and((wra) -> {
+                wra.eq("attr_id", key).or().like("attr_name", key);
             });
         }
         IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(map), wrapper);
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public List<AttrEntity> getRelationAttr(Long attrGroupId) {
+        List<AttrAttrgroupRelationEntity> entities = relationDao.selectList(new QueryWrapper<AttrAttrgroupRelationEntity>().eq("attr_group_id", attrGroupId));
+        List<Long> attrIds = entities.stream().map((attr) -> {
+            return attr.getAttrId();
+        }).collect(Collectors.toList());
+
+        if (attrIds == null || attrIds.size() == 0) {
+            return null;
+        }
+        Collection<AttrEntity> attrEntities = this.listByIds(attrIds);
+        return (List<AttrEntity>) attrEntities;
     }
 
 }

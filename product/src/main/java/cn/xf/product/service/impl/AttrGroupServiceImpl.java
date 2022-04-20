@@ -90,6 +90,30 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     }
 
     /**
+     * 根据分类id查出所有的分组以及这些组里面的属性(规格参数)
+     *
+     * @param catelogId catelog id
+     * @return {@link List}<{@link AttrGroupWithAttrsVo}>
+     */
+    @Override
+    public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId) {
+        //1、查询当前分类下的分组信息
+        List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
+
+        //2、查询所有属性
+        List<AttrGroupWithAttrsVo> collect = attrGroupEntities.stream().map(group -> {
+            AttrGroupWithAttrsVo attrsVo = new AttrGroupWithAttrsVo();
+            BeanUtils.copyProperties(group,attrsVo);
+            // 根据分组id查询属性信息
+            List<AttrEntity> attrs = attrService.getRelationAttr(attrsVo.getAttrGroupId());
+            attrsVo.setAttrs(attrs);
+            return attrsVo;
+        }).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    /**
      * 根据分类id查出所有的分组以及这些组里面的属性
      * @param catelogId
      * @return

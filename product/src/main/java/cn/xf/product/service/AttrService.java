@@ -69,5 +69,13 @@ public interface AttrService extends IService<AttrEntity> {
      * @return {@link PageUtils}
      */
     PageUtils getWithOutRelationByGroupId(Long attrGroupId, Map<String, Object> map);
+
+    /**
+     * 根据分组id查找关联的所有基本属性
+     *
+     * @param attrGroupId attr组id
+     * @return {@link List}<{@link AttrEntity}>
+     */
+    List<AttrEntity> getRelationAttr(Long attrGroupId);
 }
 
