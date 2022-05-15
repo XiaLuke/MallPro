@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : docker_mysql
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 80028
- Source Host           : 192.168.56.10:3306
+ Source Server Version : 80027
+ Source Host           : localhost:3306
  Source Schema         : mall_warehousing
 
  Target Server Type    : MySQL
- Target Server Version : 80028
+ Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 13/02/2022 17:45:52
+ Date: 15/05/2022 15:22:19
 */
 
 SET NAMES utf8mb4;

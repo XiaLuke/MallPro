@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : docker_mysql
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 80028
- Source Host           : 192.168.56.10:3306
+ Source Server Version : 80027
+ Source Host           : localhost:3306
  Source Schema         : mall_member
 
  Target Server Type    : MySQL
- Target Server Version : 80028
+ Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 13/02/2022 17:45:23
+ Date: 15/05/2022 15:21:33
 */
 
 SET NAMES utf8mb4;
@@ -76,6 +76,9 @@ CREATE TABLE `ums_member`  (
   `growth` int(0) NULL DEFAULT NULL COMMENT '成长值',
   `status` tinyint(0) NULL DEFAULT NULL COMMENT '启用状态',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '注册时间',
+  `social_uid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '社交用户的唯一id',
+  `access_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '访问令牌',
+  `expires_in` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '访问令牌的时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '会员' ROW_FORMAT = Dynamic;
 
@@ -206,6 +209,28 @@ CREATE TABLE `ums_member_statistics_info`  (
 
 -- ----------------------------
 -- Records of ums_member_statistics_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for undo_log
+-- ----------------------------
+DROP TABLE IF EXISTS `undo_log`;
+CREATE TABLE `undo_log`  (
+  `id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(0) NOT NULL,
+  `xid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `context` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(0) NOT NULL,
+  `log_created` datetime(0) NOT NULL,
+  `log_modified` datetime(0) NOT NULL,
+  `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of undo_log
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

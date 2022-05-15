@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : docker_mysql
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 80028
- Source Host           : 192.168.56.10:3306
+ Source Server Version : 80027
+ Source Host           : localhost:3306
  Source Schema         : mall_coupon
 
  Target Server Type    : MySQL
- Target Server Version : 80028
+ Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 13/02/2022 17:45:17
+ Date: 15/05/2022 15:21:22
 */
 
 SET NAMES utf8mb4;
@@ -247,9 +247,9 @@ CREATE TABLE `sms_seckill_sku_relation`  (
   `promotion_id` bigint(0) NULL DEFAULT NULL COMMENT '活动id',
   `promotion_session_id` bigint(0) NULL DEFAULT NULL COMMENT '活动场次id',
   `sku_id` bigint(0) NULL DEFAULT NULL COMMENT '商品id',
-  `seckill_price` decimal(10, 0) NULL DEFAULT NULL COMMENT '秒杀价格',
-  `seckill_count` decimal(10, 0) NULL DEFAULT NULL COMMENT '秒杀总量',
-  `seckill_limit` decimal(10, 0) NULL DEFAULT NULL COMMENT '每人限购数量',
+  `seckill_price` decimal(10, 4) NULL DEFAULT NULL COMMENT '秒杀价格',
+  `seckill_count` int(0) NULL DEFAULT NULL COMMENT '秒杀总量',
+  `seckill_limit` int(0) NULL DEFAULT NULL COMMENT '每人限购数量',
   `seckill_sort` int(0) NULL DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '秒杀活动商品关联' ROW_FORMAT = Dynamic;
@@ -269,11 +269,14 @@ CREATE TABLE `sms_sku_full_reduction`  (
   `reduce_price` decimal(18, 4) NULL DEFAULT NULL COMMENT '减多少',
   `add_other` tinyint(1) NULL DEFAULT NULL COMMENT '是否参与其他优惠',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品满减信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品满减信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sms_sku_full_reduction
 -- ----------------------------
+INSERT INTO `sms_sku_full_reduction` VALUES (1, 27, 400.0000, 1.0000, NULL);
+INSERT INTO `sms_sku_full_reduction` VALUES (2, 28, 400.0000, 1.0000, NULL);
+INSERT INTO `sms_sku_full_reduction` VALUES (3, 29, 400.0000, 1.0000, NULL);
 
 -- ----------------------------
 -- Table structure for sms_sku_ladder
@@ -287,11 +290,14 @@ CREATE TABLE `sms_sku_ladder`  (
   `price` decimal(18, 4) NULL DEFAULT NULL COMMENT '折后价',
   `add_other` tinyint(1) NULL DEFAULT NULL COMMENT '是否叠加其他优惠[0-不可叠加，1-可叠加]',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品阶梯价格' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品阶梯价格' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sms_sku_ladder
 -- ----------------------------
+INSERT INTO `sms_sku_ladder` VALUES (1, 27, 5000, 0.80, NULL, 0);
+INSERT INTO `sms_sku_ladder` VALUES (2, 28, 5000, 0.80, NULL, 0);
+INSERT INTO `sms_sku_ladder` VALUES (3, 29, 5000, 0.80, NULL, 0);
 
 -- ----------------------------
 -- Table structure for sms_spu_bounds
@@ -304,10 +310,35 @@ CREATE TABLE `sms_spu_bounds`  (
   `buy_bounds` decimal(18, 4) NULL DEFAULT NULL COMMENT '购物积分',
   `work` tinyint(1) NULL DEFAULT NULL COMMENT '优惠生效情况[1111（四个状态位，从右到左）;0 - 无优惠，成长积分是否赠送;1 - 无优惠，购物积分是否赠送;2 - 有优惠，成长积分是否赠送;3 - 有优惠，购物积分是否赠送【状态位0：不赠送，1：赠送】]',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品spu积分设置' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商品spu积分设置' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sms_spu_bounds
+-- ----------------------------
+INSERT INTO `sms_spu_bounds` VALUES (1, 14, 500.0000, 500.0000, NULL);
+INSERT INTO `sms_spu_bounds` VALUES (2, 15, 500.0000, 500.0000, NULL);
+INSERT INTO `sms_spu_bounds` VALUES (3, 16, 500.0000, 500.0000, NULL);
+
+-- ----------------------------
+-- Table structure for undo_log
+-- ----------------------------
+DROP TABLE IF EXISTS `undo_log`;
+CREATE TABLE `undo_log`  (
+  `id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(0) NOT NULL,
+  `xid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `context` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(0) NOT NULL,
+  `log_created` datetime(0) NOT NULL,
+  `log_modified` datetime(0) NOT NULL,
+  `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of undo_log
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

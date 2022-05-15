@@ -1,21 +1,41 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : docker_mysql
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 80028
- Source Host           : 192.168.56.10:3306
+ Source Server Version : 80027
+ Source Host           : localhost:3306
  Source Schema         : mall_order
 
  Target Server Type    : MySQL
- Target Server Version : 80028
+ Target Server Version : 80027
  File Encoding         : 65001
 
- Date: 13/02/2022 17:45:41
+ Date: 15/05/2022 15:21:53
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for mq_message
+-- ----------------------------
+DROP TABLE IF EXISTS `mq_message`;
+CREATE TABLE `mq_message`  (
+  `message_id` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
+  `to_exchane` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `routing_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `class_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `message_status` int(0) NULL DEFAULT 0 COMMENT '0-新建 1-已发送 2-错误抵达 3-已抵达',
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`message_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of mq_message
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for oms_order
@@ -24,7 +44,7 @@ DROP TABLE IF EXISTS `oms_order`;
 CREATE TABLE `oms_order`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `member_id` bigint(0) NULL DEFAULT NULL COMMENT 'member_id',
-  `order_sn` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单号',
+  `order_sn` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单号',
   `coupon_id` bigint(0) NULL DEFAULT NULL COMMENT '使用的优惠券',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT 'create_time',
   `member_username` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户名',
@@ -64,7 +84,8 @@ CREATE TABLE `oms_order`  (
   `receive_time` datetime(0) NULL DEFAULT NULL COMMENT '确认收货时间',
   `comment_time` datetime(0) NULL DEFAULT NULL COMMENT '评价时间',
   `modify_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `order_sn`(`order_sn`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '订单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -78,7 +99,7 @@ DROP TABLE IF EXISTS `oms_order_item`;
 CREATE TABLE `oms_order_item`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `order_id` bigint(0) NULL DEFAULT NULL COMMENT 'order_id',
-  `order_sn` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'order_sn',
+  `order_sn` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'order_sn',
   `spu_id` bigint(0) NULL DEFAULT NULL COMMENT 'spu_id',
   `spu_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'spu_name',
   `spu_pic` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'spu_pic',
@@ -203,7 +224,7 @@ CREATE TABLE `oms_order_setting`  (
 DROP TABLE IF EXISTS `oms_payment_info`;
 CREATE TABLE `oms_payment_info`  (
   `id` bigint(0) NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `order_sn` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单号（对外业务号）',
+  `order_sn` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单号（对外业务号）',
   `order_id` bigint(0) NULL DEFAULT NULL COMMENT '订单id',
   `alipay_trade_no` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '支付宝交易流水号',
   `total_amount` decimal(18, 4) NULL DEFAULT NULL COMMENT '支付总金额',
@@ -213,7 +234,9 @@ CREATE TABLE `oms_payment_info`  (
   `confirm_time` datetime(0) NULL DEFAULT NULL COMMENT '确认时间',
   `callback_content` varchar(4000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '回调内容',
   `callback_time` datetime(0) NULL DEFAULT NULL COMMENT '回调时间',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `order_sn`(`order_sn`) USING BTREE,
+  UNIQUE INDEX `alipay_trade_no`(`alipay_trade_no`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '支付信息表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -237,6 +260,28 @@ CREATE TABLE `oms_refund_info`  (
 
 -- ----------------------------
 -- Records of oms_refund_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for undo_log
+-- ----------------------------
+DROP TABLE IF EXISTS `undo_log`;
+CREATE TABLE `undo_log`  (
+  `id` bigint(0) NOT NULL AUTO_INCREMENT,
+  `branch_id` bigint(0) NOT NULL,
+  `xid` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `context` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `rollback_info` longblob NOT NULL,
+  `log_status` int(0) NOT NULL,
+  `log_created` datetime(0) NOT NULL,
+  `log_modified` datetime(0) NOT NULL,
+  `ext` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `ux_undo_log`(`xid`, `branch_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of undo_log
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;
