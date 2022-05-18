@@ -16,12 +16,12 @@
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button
-          v-if="isAuth('ware:purchase:save')"
+          v-if="isAuth('warehousing:purchase:save')"
           type="primary"
           @click="addOrUpdateHandle()"
         >新增</el-button>
         <el-button
-          v-if="isAuth('ware:purchase:delete')"
+          v-if="isAuth('warehousing:purchase:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import AddOrUpdate from "./purchase-add-or-update";
+import AddOrUpdate from "./component/purchase-add-or-update";
 export default {
   data() {
     return {
@@ -124,7 +124,7 @@ export default {
     this.getDataList();
   },
   created() {
-    
+
   },
   methods: {
     opendrawer(row){
@@ -143,7 +143,7 @@ export default {
       this.caigoudialogVisible = false;
       this.$http({
         url: this.$http.adornUrl(
-          `/ware/purchase/update`
+          `/warehousing/purchase/update`
         ),
         method: "post",
         data: this.$http.adornData({
@@ -160,7 +160,7 @@ export default {
             type: "success",
             duration: 1500
           });
-          
+
           this.userId = "";
           this.getDataList();
         } else {
@@ -184,7 +184,7 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/ware/purchase/list"),
+        url: this.$http.adornUrl("/warehousing/purchase/list"),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
@@ -241,7 +241,7 @@ export default {
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/ware/purchase/delete"),
+          url: this.$http.adornUrl("/warehousing/purchase/delete"),
           method: "post",
           data: this.$http.adornData(ids, false)
         }).then(({ data }) => {

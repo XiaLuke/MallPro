@@ -13,5 +13,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface WareSkuDao extends BaseMapper<WareSkuEntity> {
-	
+
+    /**
+     * 商品入库
+     *
+     * @param skuId  商品id
+     * @param wareId 仓库id
+     * @param skuNum 商品数量
+     */
+    void addStock(Long skuId, Long wareId, Integer skuNum);
 }

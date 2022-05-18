@@ -31,5 +31,13 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
      * @param infoEntity 信息实体
      */
     void saveBaseSpuInfo(SpuInfoEntity infoEntity);
+
+    /**
+     * 通过条件查询页面
+     *
+     * @param params 参数个数
+     * @return {@link PageUtils}
+     */
+    PageUtils queryPageByCondition(Map<String, Object> params);
 }
 

@@ -11,9 +11,9 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('ware:waresku:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+        <el-button v-if="isAuth('warehousing:waresku:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
         <el-button
-          v-if="isAuth('ware:waresku:delete')"
+          v-if="isAuth('warehousing:waresku:delete')"
           type="danger"
           @click="deleteHandle()"
           :disabled="dataListSelections.length <= 0"
@@ -88,7 +88,7 @@ export default {
   methods: {
     getWares() {
       this.$http({
-        url: this.$http.adornUrl("/ware/wareinfo/list"),
+        url: this.$http.adornUrl("/warehousing/wareinfo/list"),
         method: "get",
         params: this.$http.adornParams({
           page: 1,
@@ -102,7 +102,7 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/ware/waresku/list"),
+        url: this.$http.adornUrl("/warehousing/waresku/list"),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
@@ -160,7 +160,7 @@ export default {
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/ware/waresku/delete"),
+          url: this.$http.adornUrl("/warehousing/waresku/delete"),
           method: "post",
           data: this.$http.adornData(ids, false)
         }).then(({ data }) => {

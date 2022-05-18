@@ -50,4 +50,6 @@ public class PurchaseDetailEntity implements Serializable {
 	 */
 	private Integer status;
 
+	// TODO: 缺少实际采购数量和失败原因
+
 }

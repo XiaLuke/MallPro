@@ -21,7 +21,7 @@
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
         <el-button
-          v-if="isAuth('ware:purchasedetail:save')"
+          v-if="isAuth('warehousing:purchasedetail:save')"
           type="primary"
           @click="addOrUpdateHandle()"
         >新增</el-button>
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import AddOrUpdate from "./purchasedetail-add-or-update";
+import AddOrUpdate from "./component/purchasedetail-add-or-update";
 export default {
   data() {
     return {
@@ -148,7 +148,7 @@ export default {
         )
           .then(() => {
             this.$http({
-              url: this.$http.adornUrl("/ware/purchase/merge"),
+              url: this.$http.adornUrl("/warehousing/purchase/merge"),
               method: "post",
               data: this.$http.adornData({ items: items }, false)
             }).then(({ data }) => {
@@ -158,7 +158,7 @@ export default {
           .catch(() => {});
       } else {
         this.$http({
-          url: this.$http.adornUrl("/ware/purchase/merge"),
+          url: this.$http.adornUrl("/warehousing/purchase/merge"),
           method: "post",
           data: this.$http.adornData(
             { purchaseId: this.purchaseId, items: items },
@@ -172,7 +172,7 @@ export default {
     },
     getUnreceivedPurchase() {
       this.$http({
-        url: this.$http.adornUrl("/ware/purchase/unreceive/list"),
+        url: this.$http.adornUrl("/warehousing/purchase/notReceived/list"),
         method: "get",
         params: this.$http.adornParams({})
       }).then(({ data }) => {
@@ -197,7 +197,7 @@ export default {
     },
     getWares() {
       this.$http({
-        url: this.$http.adornUrl("/ware/wareinfo/list"),
+        url: this.$http.adornUrl("/warehousing/wareinfo/list"),
         method: "get",
         params: this.$http.adornParams({
           page: 1,
@@ -211,7 +211,7 @@ export default {
     getDataList() {
       this.dataListLoading = true;
       this.$http({
-        url: this.$http.adornUrl("/ware/purchasedetail/list"),
+        url: this.$http.adornUrl("/warehousing/purchasedetail/list"),
         method: "get",
         params: this.$http.adornParams({
           page: this.pageIndex,
@@ -270,7 +270,7 @@ export default {
         }
       ).then(() => {
         this.$http({
-          url: this.$http.adornUrl("/ware/purchasedetail/delete"),
+          url: this.$http.adornUrl("/warehousing/purchasedetail/delete"),
           method: "post",
           data: this.$http.adornData(ids, false)
         }).then(({ data }) => {
