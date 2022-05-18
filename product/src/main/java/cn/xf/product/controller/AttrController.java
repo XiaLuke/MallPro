@@ -1,9 +1,12 @@
 package cn.xf.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import cn.xf.product.entity.ProductAttrValueEntity;
+import cn.xf.product.service.ProductAttrValueService;
 import cn.xf.product.vo.AttrRespVo;
 import cn.xf.product.vo.AttributeVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,8 @@ import cn.xf.common.utils.R;
 public class AttrController {
     @Autowired
     private AttrService attrService;
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
 
     /**
      * 列表
@@ -86,6 +91,32 @@ public class AttrController {
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] attrIds){
 		attrService.removeByIds(Arrays.asList(attrIds));
+
+        return R.ok();
+    }
+
+    /**
+     *  获取spu规格
+     */
+    @GetMapping("/base/listforspu/{spuId}")
+    public R baseAttrlistforspu(@PathVariable("spuId") Long spuId){
+
+        List<ProductAttrValueEntity> entities = productAttrValueService.baseAttrListforspu(spuId);
+
+        return R.ok().put("data",entities);
+    }
+
+    /**
+     * 更新商品规格
+     *
+     * @param spuId    商品 id
+     * @param entities 实体
+     * @return {@link R}
+     */
+    @PostMapping("/update/{spuId}")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId,
+                           @RequestBody List<ProductAttrValueEntity> entities){
+        productAttrValueService.updateSpuAttr(spuId,entities);
 
         return R.ok();
     }
