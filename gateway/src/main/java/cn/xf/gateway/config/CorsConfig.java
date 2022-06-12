@@ -12,6 +12,7 @@ import org.springframework.web.server.ServerWebExchange;
  * @author XF
  * <p>
  * Configuration：指定为配置类
+ * 项目总跨域配置
  */
 @Configuration
 public class CorsConfig {
