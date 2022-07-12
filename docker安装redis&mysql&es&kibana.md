@@ -71,7 +71,7 @@ flush privileges;
 4.运行容器
     docker run --name elasticsearch -p 9200:9200 -p 9300:9300 \
         -e "discovery.type=single-node" \
-        -e ES_JAVA_OPTS="-Xms64m -Xmx128m" \
+        -e ES_JAVA_OPTS="-Xms128m -Xmx512m" \
         -v /usr/local/docker/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
         -v /usr/local/docker/elasticsearch/data:/usr/share/elasticsearch/data \
         -v /usr/local/docker/elasticsearch/plugins:/usr/share/elasticsearch/plugins \
@@ -86,6 +86,22 @@ flush privileges;
      docker run --name kibana -e ELASTICSEARCH_HOSTS=http://192.168.56.1:9200 -p 5601:5601 -d kibana:7.4.2
      版本需要与elasticsearch对应
 
+# nginx
+1、启动一个nginx实例，用来复制配置
+    docker run -p 80:80 --name nginx -d nginx:1.10
+2、拷贝文件到自定义目录
+    docker container cp nginx:/etc/nginx . （.为当前目录）
+3、停止临时nginx
+    docker stop nginx;docker rm nginx
+4、创建新的ngxin
+    docker run -p 80:80 --name nginx \
+    -v /usr/local/docker/nginx/html:/usr/share/nginx/html \
+    -v /usr/local/docker/nginx/logs:/var/log/nginx \
+    -v /usr/local/docker/nginx/conf:/etc/nginx \
+    -d nginx:1.10
 
 
 
+
+配置镜像自动重启
+    docker update container --restart=always
