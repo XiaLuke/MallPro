@@ -1,6 +1,9 @@
 package cn.xf.product.service.impl;
 
+import cn.xf.product.vo.SkuItemSaleAttrVo;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,6 +27,28 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
         );
 
         return new PageUtils(page);
+    }
+
+    /**
+     * 根据商品id查询商品属性集合
+     *
+     * @param productId 商品id
+     * @return {@link List}<{@link SkuItemSaleAttrVo}>
+     */
+    @Override
+    public List<SkuItemSaleAttrVo> queryAttrInfoByProductId(Long productId) {
+        return baseMapper.queryAttrInfoByProductId(productId);
+    }
+
+    /**
+     * 获取商品销售属性组合
+     *
+     * @param skuId sku id
+     * @return {@link List}<{@link String}>
+     */
+    @Override
+    public List<String> getSaleAttributeConcatList(Long skuId) {
+        return baseMapper.getSaleAttributeConcatList(skuId);
     }
 
 }

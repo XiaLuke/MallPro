@@ -7,7 +7,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 
 /**
+ * 网关应用程序
  * 排除关于数据库配置
+ *
+ * @author XF
+ * @date 2022/08/24
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableDiscoveryClient

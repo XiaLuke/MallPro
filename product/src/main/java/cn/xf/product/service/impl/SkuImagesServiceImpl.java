@@ -1,6 +1,8 @@
 package cn.xf.product.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,6 +26,17 @@ public class SkuImagesServiceImpl extends ServiceImpl<SkuImagesDao, SkuImagesEnt
         );
 
         return new PageUtils(page);
+    }
+
+    /**
+     * 根据商品库存id得到商品库存图片信息
+     *
+     * @param skuId sku id
+     * @return {@link List}<{@link SkuImagesEntity}>
+     */
+    @Override
+    public List<SkuImagesEntity> getProductStockImageInformationByProductStockId(Long skuId) {
+        return baseMapper.selectList(new QueryWrapper<SkuImagesEntity>().eq("sku_id", skuId));
     }
 
 }

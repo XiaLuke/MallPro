@@ -77,5 +77,8 @@ public interface AttrService extends IService<AttrEntity> {
      * @return {@link List}<{@link AttrEntity}>
      */
     List<AttrEntity> getRelationAttr(Long attrGroupId);
+
+    List<Long> selectSearchAttrs(List<Long> attrIds);
+
 }
 

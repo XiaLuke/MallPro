@@ -1,5 +1,6 @@
 package cn.xf.product.service;
 
+import cn.xf.product.vo.Catelog2Vo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.xf.common.utils.PageUtils;
 import cn.xf.product.entity.CategoryEntity;
@@ -46,5 +47,20 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @param category 类别
      */
     void updateCascade(CategoryEntity category);
+
+    /**
+     * 查询一级分类
+     *
+     * @return {@link List}<{@link CategoryEntity}>
+     */
+    List<CategoryEntity> queryLevelOneClassification();
+
+    /**
+     * 获取二级三级json数据
+     *
+     * @return {@link Map}<{@link String}, {@link List}<{@link Catelog2Vo}>>
+     */
+    Map<String, List<Catelog2Vo>> getCatalogJson();
+
 }
 

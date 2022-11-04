@@ -43,6 +43,11 @@ public class SysLoginController extends AbstractController {
 	@Autowired
 	private SysCaptchaService sysCaptchaService;
 
+	@GetMapping("test")
+	public R test(){
+		return R.ok("ssss");
+	}
+
 	/**
 	 * 验证码
 	 */

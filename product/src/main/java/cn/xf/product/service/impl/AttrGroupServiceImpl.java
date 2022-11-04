@@ -6,12 +6,11 @@ import cn.xf.product.entity.AttrEntity;
 import cn.xf.product.service.AttrService;
 import cn.xf.product.vo.AttrGroupRelationVo;
 import cn.xf.product.vo.AttrGroupWithAttrsVo;
+import cn.xf.product.vo.SpuItemAttrGroupVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -114,28 +113,17 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
     }
 
     /**
-     * 根据分类id查出所有的分组以及这些组里面的属性
-     * @param catelogId
-     * @return
+     * 根据商品id查询商品规格参数信息
+     *
+     * @param productId 产品id
+     * @param catalogId 产品分类id
+     * @return {@link List}<{@link SpuItemAttrGroupVo}>
      */
-   /* @Override
-    public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId) {
-        //com.atguigu.gulimall.product.vo
-        //1、查询分组信息
-        List<AttrGroupEntity> attrGroupEntities = this.list(new QueryWrapper<AttrGroupEntity>().eq("catelog_id", catelogId));
-
-        //2、查询所有属性
-        List<AttrGroupWithAttrsVo> collect = attrGroupEntities.stream().map(group -> {
-            AttrGroupWithAttrsVo attrsVo = new AttrGroupWithAttrsVo();
-            BeanUtils.copyProperties(group,attrsVo);
-            List<AttrEntity> attrs = attrService.getRelationAttr(attrsVo.getAttrGroupId());
-            attrsVo.setAttrs(attrs);
-            return attrsVo;
-        }).collect(Collectors.toList());
-
-        return collect;
-
-
-    }*/
+    @Override
+    public List<SpuItemAttrGroupVo> getProductSpecificationsByProductId(Long productId, Long catalogId) {
+        // 1.获取商品规格参数，需要先获取当前商品有多少对应的属性分组
+        // 可以根据分类id直接查询出所有的分组信息
+        return baseMapper.getProductSpecificationsByProductId(productId,catalogId);
+    }
 
 }

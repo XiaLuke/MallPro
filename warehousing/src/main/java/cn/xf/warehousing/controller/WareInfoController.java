@@ -1,15 +1,13 @@
 package cn.xf.warehousing.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import cn.xf.warehousing.vo.FareVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cn.xf.warehousing.entity.WareInfoEntity;
 import cn.xf.warehousing.service.WareInfoService;
@@ -30,6 +28,12 @@ import cn.xf.common.utils.R;
 public class WareInfoController {
     @Autowired
     private WareInfoService wareInfoService;
+
+    @GetMapping("/fare")
+    public R getFare(@RequestParam("addressId") Long addressId){
+        FareVo fare = wareInfoService.getFare(addressId);
+        return R.ok().setData(fare);
+    }
 
     /**
      * 列表

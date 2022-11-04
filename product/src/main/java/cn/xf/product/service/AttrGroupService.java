@@ -2,6 +2,7 @@ package cn.xf.product.service;
 
 import cn.xf.product.vo.AttrGroupRelationVo;
 import cn.xf.product.vo.AttrGroupWithAttrsVo;
+import cn.xf.product.vo.SpuItemAttrGroupVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.xf.common.utils.PageUtils;
 import cn.xf.product.entity.AttrGroupEntity;
@@ -44,6 +45,15 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * @return {@link List}<{@link AttrGroupWithAttrsVo}>
      */
     List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);
+
+    /**
+     * 根据商品id查询商品规格参数
+     *
+     * @param productId 产品id
+     * @param catalogId
+     * @return {@link List}<{@link SpuItemAttrGroupVo}>
+     */
+    List<SpuItemAttrGroupVo> getProductSpecificationsByProductId(Long productId, Long catalogId);
 
 
 //    List<AttrGroupWithAttrsVo> getAttrGroupWithAttrsByCatelogId(Long catelogId);

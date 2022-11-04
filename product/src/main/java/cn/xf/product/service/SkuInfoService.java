@@ -1,9 +1,11 @@
 package cn.xf.product.service;
 
+import cn.xf.product.vo.SkuItemVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.xf.common.utils.PageUtils;
 import cn.xf.product.entity.SkuInfoEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,5 +33,16 @@ public interface SkuInfoService extends IService<SkuInfoEntity> {
      * @return {@link PageUtils}
      */
     PageUtils queryPageCondition(Map<String, Object> params);
+
+    List<SkuInfoEntity> getSkusBySpuId(Long spuId);
+
+    /**
+     * 产品库存信息
+     *
+     * @param skuId sku id
+     * @return {@link SkuItemVo}
+     * @throws Exception 异常
+     */
+    SkuItemVo productInventoryDetails(Long skuId) throws Exception;
 }
 

@@ -1,172 +1,188 @@
-底层是对lucene的封装
+### _cat
 
-倒排索引
+查看es的健康状态：`_cat/health`
 
-将所有请求都封装成了rest api
+查看es主节点信息：`_cat/master`
 
-put请求：（索引名（'数据库名称'）/类型名('表名称')/几号数据）
-    第一次发送数据为新增，之后发送相同数据时为更新操作，版本号为当前版本号+1
-    如果不携带id发送数据，请求方式不允许
+查看es所有索引：`_cat/indices`
 
-    更新：
-    （索引名/类型名/几号数据）
-    {
-        "name":"张三",
-        "age":18,
-        "phone": "123456789"
-    }
+### put请求
 
-post请求：（索引/类型/几号数据）
-    第一次发送请求为新增，之后发送相同数据时为更新操作，版本号为当前版本号+1
-    （索引/类型/）
-    每次发送请求都为新增操作，每次有一个唯一id
+保存数据：保存在那个索引的什么类型下，指定用那个唯一标识
 
-    更新：
-    （索引名/类型名/几号数据/_update）
-        {
-            "doc": {
-                "name": "张三",
-                "age": 18,
-            }
-        }
-        当跟新数据与愿数据一致时，所有数据都不会改变（result返回数据为"noop"）
+如果发送多次则为保存操作
 
-get请求：（索引/类型/几号数据）
-    查询指定id的数据
-    {
-        "_index": "索引名称",
-        "_type": "类型名称",
-        "_id": "数据id",
-        "_version": "版本号",
-        "_seq_no": "序列号", // 并发控制字段，跟新时+1，用来做乐观锁
-        "_primary_term": "主键", // 做集群中使用，主分片发生变化，该字段变化
-        "found": true,
-        "_source": {      // 查询到的数据
-            "name": "张三",
-            "age": 18,
-        }
-    }
-
-    ** 为了保证数据的安全行，在修改时需要先查询，然后携带序列号与主键再修改，这样可以保证数据的安全性（索引名/类型名/几号数据/?if_seq_no=xx&if_primary_term=xxx） **
-
-delete请求：
-    删除指定id数据不存在时：（索引名/类型名/几号数据）
-    {
-        "found": false,
-        "_index": "索引名称",
-        "_type": "类型名称",
-        "_id": "数据id",
-    }
-
-    删除索引：（索引名）
-
-post /_bulk  批量导入数据
-https://raw.githubusercontent.com/elastic/elasticsearch/7.4/docs/src/test/resources/accounts.json
-
-
-### ES的检索方式
+如：/customer/external/1
 ```
-1、通过使用REST request URI 发送搜索参数（url+检索参数）
-
-2、通过使用REST request body发送（url+请求体）
-```
-
-**检索信息**
-_search
-方式1：`GET bank/_search?q=*&sort=account_number:asc`
-方式2：`GET bank/_search{
-"query":{
-    "match_all":{}
-},
-"sort":[{
-    "account_number":{
-        "order":"desc"
-    }
-}]
-}`
-
-**Query DSL（查询对象领域语言）**
-1、基本语法
-```
-GET /bank/_search
 {
-  "query": {
-    "match_all": {}
+  "_index": "customer", // 索引
+  "_type": "external", // 类型
+  "_id": "1", // 唯一标识
+  "_version": 1, // 版本号，
+  "result": "created",
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
   },
-  "sort": [
-    {
-      "balance": {
-        "order": "desc"
-      }
-    }
-  ],
-  "from": 0,
-  "size": 20
+  "_seq_no": 0,
+  "_primary_term": 1 // 分片
 }
 ```
 
-2、返回部分字段
-`_source:["字段1","字段2"]`
+**乐观锁**
 
-3、match匹配查询
- match中匹配的非字符串字段，则为精确查询，否则为模糊查询
-查询出来的结果按照平分进行排序
- ```java
- // 精确查询，非字符串字段
- get /bank/_search
- {
-   "query":{
-     "match": {
-       "balance": 49989
-     }
-   }
- }
+在更新请求末尾添加`?if_seq_no=指定版本&if_primary_term=指定版本`
 
- get /bank/_search
- {
-   "query":{
-     "match": {
-       "address": "Mill"
-     }
-   }
- }
- ```
 
- 4、match_phrase短句查询
- ```java
- get /bank/_search
-  {
-    "query":{
-      "match": {
-        "address": "Mill Road"
-      }
-    }
-  }
+### post请求
+
+post在发送请求时可以不指定唯一标识（id），会自动生成一个唯一id
+```
+{
+  "_index": "customer",
+  "_type": "external",
+  "_id": "8noc0IIBdkJ0_MtRI7zl",
+  "_version": 1,
+  "result": "created",
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
+  },
+  "_seq_no": 4,
+  "_primary_term": 1
+}
 ```
 
-5、multi_match多字段匹配
-```java
-get /bank/_search
-  {
+### _update操作
+
+使用post或put时在末尾添加_update
+
+如果是使用post更新数据，当数据一致时，所有信息不会改变
+
+### delete请求
+
+可删除索引，数据；不能删除类型
+
+### 批量导入数据 _bulk
+
+请求必须为post
+
+如：post /bank/account/_bulk
+
+### 查询
+
+get bank/_search?q=*&sort=account_number:asc
+
+查询银行下的所有并以account_number进行升序
+
+get bank/_search
+{
     "query":{
-      "multi_match": {
-        "query":"查询的对象"，
-        "fields":["查询的字段1","查询的字段2"]
+        "match_all":{} // 匹配所有
+    }
+    "sort":{ // 查询条件
+        
+    }
+}
+
+### 聚合
+
+```
+使用聚合查询年龄分布，平均年龄，平均薪资
+GET bank/_search
+{
+  "query": {
+    "match": {
+      "address": "mill"
+    }
+  },
+  "aggs": {
+    "aggType": {
+      "terms": {
+        "field": "age",
+        "size": 10
+      }
+    },
+    "aggAVG":{
+      "avg": {
+        "field": "age"
+      }
+    },
+    "balanceAvg":{
+      "avg": {
+        "field": "balance"
       }
     }
   }
+}
 ```
 
 ### 映射
-指定字段的类型
 
+创建新的索引，并将数据进行迁移
 
-### 为什么通过9200给nginx发送请求而不使用9300端口
-```text
-1、9300端口主要为tcp协议接口，使用不同springboot版本，transport.jar 的版本也不同，不能适配es版本；7.x已经不建议使用，8以后废弃
-2、9200端口主要为http协议，有非官方的jestClient发送请求，但是速度慢。
 ```
-**综上所述，使用官方的Elasticsearch-Rest-Client**，这是官方的RestClient，封装了ES操作，API层次分明，上手简单
+PUT /newbank
+{
+  "mappings": {
+    "properties": {
+       "account_number" : {
+          "type" : "long"
+        },
+        "address" : {
+          "type" : "text"
+        },
+        "age" : {
+          "type" : "integer"
+        },
+        "balance" : {
+          "type" : "long"
+        },
+        "city" : {
+          "type" : "keyword"
+        },
+        "email" : {
+          "type" : "keyword"
+        },
+        "employer" : {
+          "type" : "keyword"
+        },
+        "firstname" : {
+          "type" : "text"
+        },
+        "gender" : {
+          "type" : "keyword"
+        },
+        "lastname" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "state" : {
+          "type" : "text"
+        }
+    }
+  }
+}
+```
 
-### 为什么不使用官方的javaScript Client
-es主要是用于后台的集群服务，并且端口不一定会暴露出来；js客户端对es的支持度较低
+数据迁移
+
+```
+POST _reindex
+{
+  "source": {
+    "index": "bank",
+    "type":"account"
+  }
+  , "dest": {
+    "index": "newbank"
+  }
+}
+```

@@ -39,5 +39,19 @@ public interface SpuInfoService extends IService<SpuInfoEntity> {
      * @return {@link PageUtils}
      */
     PageUtils queryPageByCondition(Map<String, Object> params);
+
+    /**
+     * 商品上架
+     * @param spuId
+     */
+    void up(Long spuId);
+
+    /**
+     * 根据skuId查询spu的信息
+     *
+     * @param skuId sku id
+     * @return {@link SpuInfoEntity}
+     */
+    SpuInfoEntity getSpuInfoBySkuId(Long skuId);
 }
 
